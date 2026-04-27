@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sugerencias | CREDICOM</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .sugerencias-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            font-family: 'Inter', sans-serif;
+        }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #3b82f6; text-decoration: none; font-weight: 600; }
+        .comment-form { display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; }
+        .comment-form input, .comment-form textarea {
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        .btn-submit { background: #0f172a; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-submit:hover { background: #1e293b; }
+        .comment-item { padding: 15px; border-bottom: 1px solid #f1f5f9; }
+        .comment-nick { font-weight: 700; color: #1e293b; margin-bottom: 4px; display: block; }
+        .comment-text { color: #475569; line-height: 1.5; }
+    </style>
+</head>
+<body style="background-color: #f1f5f9; margin: 0;">
+    <div class="sugerencias-container">
+        <a href="index.html" class="back-link">← Volver al Simulador</a>
+        <h1 style="font-size: 1.5rem; color: #0f172a; margin-bottom: 20px;">Sugerencias y Comentarios</h1>
+        
+        <form id="formSugerencia" class="comment-form">
+            <input type="text" id="nick" placeholder="Tu Nickname" required>
+            <textarea id="comentario" placeholder="Escribe tu sugerencia aquí..." rows="4" required></textarea>
+            <button type="submit" class="btn-submit">Publicar Sugerencia</button>
+        </form>
+
+        <div id="listaComentarios">
+            <h2 style="font-size: 1.2rem; color: #0f172a; margin-bottom: 15px;">Comentarios de la comunidad</h2>
+            <div id="commentsWrapper"></div>
+        </div>
+    </div>
+
+    <script>
+        const wrapper = document.getElementById('commentsWrapper');
+        const form = document.getElementById('formSugerencia');
+
+        function mostrarComentarios() {
+            const data = JSON.parse(localStorage.getItem('credicom_sugerencias') || '[]');
+            wrapper.innerHTML = data.length ? data.map(c => `
+                <div class="comment-item">
+                    <span class="comment-nick">@${c.nick}</span>
+                    <div class="comment-text">${c.text}</div>
+                </div>
+            `).reverse().join('') : '<p style="color: #64748b;">No hay comentarios aún. ¡Sé el primero en escribir!</p>';
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nick = document.getElementById('nick').value;
+            const text = document.getElementById('comentario').value;
+            const data = JSON.parse(localStorage.getItem('credicom_sugerencias') || '[]');
+            data.push({ nick, text });
+            localStorage.setItem('credicom_sugerencias', JSON.stringify(data));
+            form.reset();
+            mostrarComentarios();
+        });
+
+        mostrarComentarios();
+    </script>
+</body>
+</html>
