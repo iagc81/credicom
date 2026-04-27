@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CREDICOM | Comparador Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="brand">CREDI<strong>COM</strong> <span class="v-tag">v4.2 AUDIT</span></div>
+        </div>
+    </nav>
+
+    <div class="app-wrapper">
+        <header class="hero-section">
+            <h1>Simulador de Crédito</h1>
+        </header>
+
+        <div class="input-grid triple">
+            <div class="fin-card border-a">
+                <input type="text" id="nombreA" class="entity-name" value="CAJUBI">
+                <div class="primary-input">
+                    <label>Capital (PYG)</label>
+                    <input type="text" id="capA" onkeyup="formatearMonto(this)" value="200.000.000">
+                </div>
+                <div class="secondary-inputs">
+                    <div class="f-group"><label>TNA %</label><input type="number" id="tnaA" value="12"></div>
+                    <div class="f-group"><label>Meses</label><input type="number" id="plazoA" value="72"></div>
+                    <div class="f-group"><label>Com %</label><input type="number" id="comA" value="0"></div>
+                    <div class="f-group"><label>Seg %</label><input type="number" id="segA" value="0"></div>
+                    <div class="f-group checkbox-group" style="grid-column: span 2;">
+                        <input type="checkbox" id="hasIvaA"> <label for="hasIvaA">Aplicar IVA s/ Interés</label>
+                    </div>
+                </div>
+                <div id="resumenA" class="resumen-ejecutivo" style="display:none;">
+                    <div class="res-item">Cuota Inicial: <strong id="cuotaA">0</strong></div>
+                    <div class="res-item">Total Interés: <span id="resIntA">0</span></div>
+                    <div class="res-item total-highlight">Total a Pagar: <span id="totalA">0</span></div>
+                    <div class="chart-container-inner"><canvas id="chartPieA"></canvas></div>
+                </div>
+            </div>
+
+            <div class="fin-card border-b">
+                <input type="text" id="nombreB" class="entity-name" value="SUD">
+                <div class="primary-input">
+                    <label>Capital (PYG)</label>
+                    <input type="text" id="capB" onkeyup="formatearMonto(this)" value="200.000.000">
+                </div>
+                <div class="secondary-inputs">
+                    <div class="f-group"><label>TNA %</label><input type="number" id="tnaB" value="10"></div>
+                    <div class="f-group"><label>Meses</label><input type="number" id="plazoB" value="72"></div>
+                    <div class="f-group"><label>Com %</label><input type="number" id="comB" value="3.3"></div>
+                    <div class="f-group"><label>Seg %</label><input type="number" id="segB" value="0.04"></div>
+                    <div class="f-group checkbox-group" style="grid-column: span 2;">
+                        <input type="checkbox" id="hasIvaB" checked> <label for="hasIvaB">Aplicar IVA s/ Interés</label>
+                    </div>
+                </div>
+                <div id="resumenB" class="resumen-ejecutivo" style="display:none;">
+                    <div class="res-item">Cuota Inicial: <strong id="cuotaB">0</strong></div>
+                    <div class="res-item">Total Interés: <span id="resIntB">0</span></div>
+                    <div class="res-item total-highlight">Total a Pagar: <span id="totalB">0</span></div>
+                    <div class="chart-container-inner"><canvas id="chartPieB"></canvas></div>
+                </div>
+            </div>
+
+            <div class="fin-card border-c">
+                <input type="text" id="nombreC" class="entity-name" value="CONT">
+                <div class="primary-input">
+                    <label>Capital (PYG)</label>
+                    <input type="text" id="capC" onkeyup="formatearMonto(this)" value="200.000.000">
+                </div>
+                <div class="secondary-inputs">
+                    <div class="f-group"><label>TNA %</label><input type="number" id="tnaC" value="11"></div>
+                    <div class="f-group"><label>Meses</label><input type="number" id="plazoC" value="72"></div>
+                    <div class="f-group"><label>Com %</label><input type="number" id="comC" value="11"></div>
+                    <div class="f-group"><label>Seg %</label><input type="number" id="segC" value="0.04"></div>
+                    <div class="f-group checkbox-group" style="grid-column: span 2;">
+                        <input type="checkbox" id="hasIvaC"> <label for="hasIvaC">Aplicar IVA s/ Interés</label>
+                    </div>
+                </div>
+                <div id="resumenC" class="resumen-ejecutivo" style="display:none;">
+                    <div class="res-item">Cuota Inicial: <strong id="cuotaC">0</strong></div>
+                    <div class="res-item">Total Interés: <span id="resIntC">0</span></div>
+                    <div class="res-item total-highlight">Total a Pagar: <span id="totalC">0</span></div>
+                    <div class="chart-container-inner"><canvas id="chartPieC"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-actions">
+            <button class="btn-primary" onclick="procesarCalculos()">CALCULAR COMPARATIVA</button>
+            <button class="btn-outline" onclick="abrirReporteHTML()">VER PLAN DE PAGOS</button>
+        </div>
+
+        <div class="charts-area" id="chartsArea" style="display:none;">
+            <canvas id="chartEvolucion"></canvas>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
