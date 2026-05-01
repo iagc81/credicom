@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sugerencias | CREDICOM</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         .sugerencias-container {
@@ -50,31 +51,48 @@
     </div>
 
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDit_8OHbGaw31_vgPYSEUkoCoM-yF7heo",
+            authDomain: "credicomsugerencias.firebaseapp.com",
+            databaseURL: "https://credicomsugerencias-default-rtdb.firebaseio.com",
+            projectId: "credicomsugerencias",
+            storageBucket: "credicomsugerencias.firebasestorage.app",
+            messagingSenderId: "534481778913",
+            appId: "1:534481778913:web:b2df3dcecae9c02eb59fa0"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const suggestionsRef = db.ref('comentarios');
+
         const wrapper = document.getElementById('commentsWrapper');
         const form = document.getElementById('formSugerencia');
 
-        function mostrarComentarios() {
-            const data = JSON.parse(localStorage.getItem('credicom_sugerencias') || '[]');
-            wrapper.innerHTML = data.length ? data.map(c => `
-                <div class="comment-item">
-                    <span class="comment-nick">@${c.nick}</span>
-                    <div class="comment-text">${c.text}</div>
-                </div>
-            `).reverse().join('') : '<p style="color: #64748b;">No hay comentarios aún. ¡Sé el primero en escribir!</p>';
-        }
+        // Cargar comentarios globales en tiempo real
+        suggestionsRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            wrapper.innerHTML = '';
+            if (data) {
+                Object.values(data).reverse().forEach(c => {
+                    const div = document.createElement('div');
+                    div.className = 'comment-item';
+                    div.innerHTML = `<span class="comment-nick">@${c.nick}</span><div class="comment-text">${c.text}</div>`;
+                    wrapper.appendChild(div);
+                });
+            } else {
+                wrapper.innerHTML = '<p style="color: #64748b;">No hay comentarios aún. ¡Sé el primero en escribir!</p>';
+            }
+        });
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const nick = document.getElementById('nick').value;
             const text = document.getElementById('comentario').value;
-            const data = JSON.parse(localStorage.getItem('credicom_sugerencias') || '[]');
-            data.push({ nick, text });
-            localStorage.setItem('credicom_sugerencias', JSON.stringify(data));
+            
+            suggestionsRef.push({ nick, text, fecha: Date.now() });
             form.reset();
-            mostrarComentarios();
         });
-
-        mostrarComentarios();
     </script>
 </body>
 </html>
