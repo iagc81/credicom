@@ -7,6 +7,7 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; color
 
 .navbar { background: var(--navy); color: white; padding: 1rem 2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 .nav-content { display: flex; align-items: center; max-width: 1200px; margin: 0 auto; }
+.nav-content { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; }
 .brand strong { color: var(--blue); }
 .v-tag { font-size: 0.6rem; opacity: 0.7; }
 
@@ -49,13 +50,18 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; color
 
 .btn-sugerencias { 
     margin-left: auto; 
+    display: inline-block;
     text-decoration: none; 
     background: var(--blue); 
     color: white; 
+    color: var(--white) !important; 
     padding: 8px 16px; 
     border-radius: 6px; 
     font-weight: 600; 
     font-size: 14px; 
     transition: background 0.2s; 
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .btn-sugerencias:hover { background: #2563eb; }
+.btn-sugerencias:hover { background: #2563eb; transform: translateY(-1px); }
