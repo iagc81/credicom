@@ -6,7 +6,6 @@
     <title>Sugerencias | CREDICOM</title>
     <link rel="stylesheet" href="style.css">
     <!-- Firebase SDK -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         .sugerencias-container {
             max-width: 600px;
@@ -50,31 +49,37 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        // Importamos las funciones necesarias del SDK de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyDit_8OHbGaw31_vgPYSEUkoCoM-yF7heo",
             authDomain: "credicomsugerencias.firebaseapp.com",
-            databaseURL: "https://credicomsugerencias-default-rtdb.firebaseio.com",
             projectId: "credicomsugerencias",
             storageBucket: "credicomsugerencias.firebasestorage.app",
             messagingSenderId: "534481778913",
-            appId: "1:534481778913:web:b2df3dcecae9c02eb59fa0"
+            appId: "1:534481778913:web:b2df3dcecae9c02eb59fa0",
+            databaseURL: "https://credicomsugerencias-default-rtdb.firebaseio.com"
         };
 
         // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const suggestionsRef = db.ref('comentarios');
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const suggestionsRef = ref(db, 'comentarios');
 
         const wrapper = document.getElementById('commentsWrapper');
         const form = document.getElementById('formSugerencia');
 
-        // Cargar comentarios globales en tiempo real
-        suggestionsRef.on('value', (snapshot) => {
+        // Escuchar cambios en tiempo real
+        onValue(suggestionsRef, (snapshot) => {
             const data = snapshot.val();
             wrapper.innerHTML = '';
             if (data) {
-                Object.values(data).reverse().forEach(c => {
+                // Convertimos el objeto en array y lo invertimos para ver los más nuevos arriba
+                const items = Object.values(data).reverse();
+                items.forEach(c => {
                     const div = document.createElement('div');
                     div.className = 'comment-item';
                     div.innerHTML = `<span class="comment-nick">@${c.nick}</span><div class="comment-text">${c.text}</div>`;
@@ -85,12 +90,14 @@
             }
         });
 
+        // Enviar sugerencia
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            const nick = document.getElementById('nick').value;
-            const text = document.getElementById('comentario').value;
-            
-            suggestionsRef.push({ nick, text, fecha: Date.now() });
+            push(suggestionsRef, {
+                nick: document.getElementById('nick').value,
+                text: document.getElementById('comentario').value,
+                fecha: Date.now()
+            });
             form.reset();
         });
     </script>
